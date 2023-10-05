@@ -1,28 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import * as mailgun from 'mailgun-js';
 
 @Injectable()
 export class EmailService {
-  private readonly transporter;
+  private readonly mg;
 
   constructor() {
-    this.transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: 'your_email@gmail.com',
-        pass: 'your_password',
-      },
+    this.mg = mailgun({
+      apiKey: process.env.MAILGUN_API_KEY,
+      domain: process.env.MAILGUN_DOMAIN,
     });
   }
 
   async sendEmail(to: string, subject: string, text: string) {
-    const mailOptions = {
-      from: 'your_email@gmail.com',
+    const data = {
+      from: 'your_email@example.com',
       to,
       subject,
       text,
     };
 
-    await this.transporter.sendMail(mailOptions);
+    try {
+      await this.mg.messages().send(data);
+      console.log('Email sent successfully');
+    } catch (error) {
+      console.error('Error sending email:', error);
+      throw new Error('Failed to send email');
+    }
   }
 }
