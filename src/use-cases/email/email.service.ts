@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as mailgun from 'mailgun-js';
+import { EmailDto } from 'src/core/dtos/email.dto';
 
 @Injectable()
 export class EmailService {
@@ -12,12 +13,12 @@ export class EmailService {
     });
   }
 
-  async sendEmail(to: string, subject: string, text: string) {
+  async sendEmail(emailDto: EmailDto) {
     const data = {
       from: 'your_email@example.com',
-      to,
-      subject,
-      text,
+      to: emailDto.to,
+      subject: emailDto.subject,
+      text: emailDto.text,
     };
 
     try {
