@@ -7,8 +7,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Send mail API')
-    .setDescription('API to send emial')
+    .setDescription('API to send emials')
     .setVersion('1.0')
+    .addTag('Email')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
