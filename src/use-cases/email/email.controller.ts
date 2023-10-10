@@ -1,4 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { EmailService } from './email.service';
 import { EmailDto } from 'src/core/dtos/email.dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -14,9 +20,15 @@ export class EmailController {
   async sendEmail(@Body() emailDto: EmailDto) {
     try {
       await this.emailService.sendEmail(emailDto);
-      return 'Email sent successfully';
+      return {
+        message: 'Email sent successfully',
+        status: 'success',
+      };
     } catch (error) {
-      throw new Error('Failed to send email');
+      throw new HttpException(
+        'Failed to send email',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
